@@ -10,4 +10,10 @@ WriteMakefile (
     ABSTRACT_FROM => $pm,
     AUTHOR => 'Ben Bullock <bkb@cpan.org>',
     LICENSE => 'perl',
+    META_MERGE => {
+        resources => {
+            repository => '',
+            bugtracker => '',
+        },
+    },
 );

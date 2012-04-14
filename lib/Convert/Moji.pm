@@ -318,14 +318,11 @@ __END__
 
 =head1 NAME
 
-Convert::Moji - convert between alphabets
+Convert::Moji - objects to convert alphabets
 
 =head1 SYNOPSIS
 
-Convert::Moji -- convert between alphabets
-
-# Ways to make a rot13 transformer:
-
+    # Examples of rot13 transformers:
     use Convert::Moji;
     # Using a table
     my %rot13;
@@ -347,19 +344,25 @@ and now $out contains "frperg". You also can go backwards with
 
 and now $inverted contains "secret".
 
-=head2 Combining conversions
+=head1 DESCRIPTION
 
-You can also chain the converters
-together, with
-
-    my $does_something = Convert::Moji->new (["table", $mytable],
-					     ["tr", $left, $right]);
+Convert::Moji creates objects which can be used to convert between
+different alphabets. It was originally designed to do the work for
+L<Lingua::JA::Moji>, to convert between different forms of Japanese
+writing. It was split out of that module as a general-purpose
+converter for any alphabets.
 
 =head2 new
 
 Create the object. Arguments are a list of array references. The array
 references should have either the "noninvertible" flag "oneway" or one
 of the following as its first argument.
+
+You can also chain the converters
+together, with
+
+    my $does_something = Convert::Moji->new (["table", $mytable],
+					     ["tr", $left, $right]);
 
 =over
 
@@ -536,21 +539,13 @@ values,
 Returns true if all of the values in C<%table> are distinct, and false
 if any two of the values in C<%table> are the same.
 
-=head1 BUGS
-
-Please report any bugs or feature requests to C<bug-convert-moji at
-rt.cpan.org>, or through the web interface at
-L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Convert-Moji>.  I
-will be notified, and then you'll automatically be notified of
-progress on your bug as I make changes.
-
 =head1 AUTHOR
 
 Ben Bullock, <bkb@cpan.org>
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2008-2011 Ben Bullock, all rights reserved.
+Copyright 2008-2012 Ben Bullock, all rights reserved.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
