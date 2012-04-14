@@ -9,7 +9,7 @@ use strict;
 
 use Carp;
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 # Load a converter from a file and return a hash reference containing
 # the left/right pairs.
@@ -319,12 +319,6 @@ __END__
 =head1 NAME
 
 Convert::Moji - convert between alphabets
-
-=head1 VERSION
-
-Version 0.01
-
-=cut
 
 =head1 SYNOPSIS
 
