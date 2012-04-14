@@ -1,8 +1,7 @@
-use warnings;
-use strict;
 use ExtUtils::MakeMaker;
 
 my $pm = 'lib/Convert/Moji.pm';
+my $repo = 'https://github.com/benkasminbullock/Convert-Moji';
 
 WriteMakefile (
     NAME => 'Convert::Moji',
@@ -12,8 +11,8 @@ WriteMakefile (
     LICENSE => 'perl',
     META_MERGE => {
         resources => {
-            repository => '',
-            bugtracker => '',
+            repository => $repo,
+            bugtracker => "$repo/issues",
         },
     },
 );
