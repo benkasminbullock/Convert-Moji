@@ -9,7 +9,7 @@ use strict;
 
 use Carp;
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 # Load a converter from a file and return a hash reference containing
 # the left/right pairs.
@@ -23,9 +23,9 @@ sub load_convertor
 	return;
     }
     my %converter;
-    while (<$file_in>) {
-	chomp;
-	my ($left, $right) = split /\s+/;
+    while (my $line = <$file_in>) {
+	chomp $line;
+	my ($left, $right) = split /\s+/, $line;
 	$converter{$left} = $right;
     }
     close $file_in or croak "Could not close '$file': $!";
@@ -48,7 +48,8 @@ sub make_regex
     @inputs = map {quotemeta} @inputs;
     if (length_one (@inputs)) {
 	return '(['.(join '', @inputs).'])';
-    } else {
+    }
+    else {
 	# Sorting is essential, otherwise shorter characters match before
 	# longer ones, causing errors if the shorter character is part of
 	# a longer one.
@@ -80,9 +81,7 @@ sub ambiguous_reverse
     my %inverted;
     for (keys %$table) {
 	my $val = $table->{$_};
-#	print "Valu is $val\n";
 	push @{$inverted{$val}}, $_;
-#	print "key $_ stuff ",join (' ',@{$inverted{$val}}),"\n";
     }
     for (keys %inverted) {
 	@{$inverted{$_}} = sort @{$inverted{$_}};
@@ -101,12 +100,13 @@ sub split_match
     if (!$convert_type || $convert_type eq 'first') {
 	$input =~ s/$lhs/$$rhs{$1}->[0]/eg;
 	return $input;
-    } elsif ($convert_type eq 'random') {
+    }
+    elsif ($convert_type eq 'random') {
 	my $size = @$rhs;
 	$input =~ s/$lhs/$$rhs{$1}->[int rand $size]/eg;
 	return $input;
-    } elsif ($convert_type eq 'all' || $convert_type eq 'all_joined') {
-#	print "$lhs $input\n";
+    }
+    elsif ($convert_type eq 'all' || $convert_type eq 'all_joined') {
 	my @output = grep {length($_) > 0} (split /$lhs/, $input);
 	for my $o (@output) {
 	    if ($o =~ /$lhs/) {
@@ -115,10 +115,12 @@ sub split_match
 	}
 	if ($convert_type eq 'all') {
 	    return \@output;
-	} else {
+	}
+        else {
 	    return join ('',map {ref($_) eq 'ARRAY' ? "[@$_]" : $_} @output);
 	}
-    } else {
+    }
+    else {
 	carp "Unknown convert_type $convert_type";
     }
 }
@@ -151,7 +153,6 @@ sub table
 	}
 	$erter->{rhs} = make_regex @values;
     }
-#    print "RHS is ",$erter->{rhs},"\n";
     return $erter;
 }
 
@@ -198,11 +199,9 @@ sub new
 	    $noinvert = 1;
 	}
 	if ($c->[0] eq "table") {
-#	    print "Adding a table\n";
 	    $erter = table ($c->[1], $noinvert);
 	} elsif ($c->[0] eq "file") {
 	    my $file = $c->[1];
-#	    print "Adding a table from file '$file'\n";
 	    my $table = Convert::Moji::load_convertor ($file);
 	    return if !$table;
 	    $erter = table ($table, $noinvert);
@@ -226,7 +225,6 @@ sub convert
 {
     my ($conv, $input) = @_;
     for (my $i = 0; $i < $conv->{erters}; $i++) {
-#	print "\$i = $i\n";
 	my $erter = $conv->{erter}->[$i];
 	if ($erter->{type} eq "table") {
 	    my $lhs = $erter->{lhs};
@@ -288,7 +286,6 @@ sub split_by_input_alphabet
     }
     elsif ($first->{type} eq 'table') {
         my $lhs = $first->{lhs};
-        print "Splitting using regex '$lhs'\n";
         @split_string = ($string =~ /$lhs/g);
     }
     elsif ($first->{type} eq 'code') {
