@@ -1,0 +1,20 @@
+Revision history for perl module Convert::Moji
+
+0.05 2012-09-16
+
+* Removes accidental debugging code
+
+0.04 2012-04-13
+
+* Documentation changes
+
+0.03 2011-06-08
+
+* Export length_one, unambiguous.
+* Document length_one, unambiguous, make_regex.
+
+0.02 2010-10-15
+
+* Add objects, rewrite documentation, etc.
+
+0.01 2008-08-19
