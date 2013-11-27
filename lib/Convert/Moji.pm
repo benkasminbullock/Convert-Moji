@@ -9,7 +9,7 @@ use strict;
 
 use Carp;
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 # Load a converter from a file and return a hash reference containing
 # the left/right pairs.
