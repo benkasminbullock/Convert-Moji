@@ -1,5 +1,9 @@
 Revision history for perl module Convert::Moji
 
+0.06 2013-11-27
+
+* Add Changes file to module.
+
 0.05 2012-09-16
 
 * Removes accidental debugging code

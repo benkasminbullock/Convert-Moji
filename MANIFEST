@@ -1,6 +1,0 @@
-lib/Convert/Moji.pm
-Makefile.PL
-MANIFEST			This list of files
-t/Convert-Moji.t
-t/string2regex.t
-t/make-regex.t
