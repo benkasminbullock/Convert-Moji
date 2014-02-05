@@ -5,3 +5,4 @@
 ^MYMETA\.(json|yml)$
 ^Makefile$
 ^build\.pl$
+dists

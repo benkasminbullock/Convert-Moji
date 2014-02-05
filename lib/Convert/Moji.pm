@@ -9,7 +9,7 @@ use strict;
 
 use Carp;
 
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 # Load a converter from a file and return a hash reference containing
 # the left/right pairs.
@@ -344,12 +344,17 @@ and now $inverted contains "secret".
 =head1 DESCRIPTION
 
 Convert::Moji creates objects which can be used to convert between
-different alphabets. It was originally designed to do the work for
-L<Lingua::JA::Moji>, to convert between different forms of Japanese
-writing. It was split out of that module as a general-purpose
-converter for any alphabets.
+different alphabets. 
+
+This is basically a helper module for L<Lingua::JA::Moji>. It was
+split out of that module as a general-purpose converter for any
+alphabets.
+
+=head1 FUNCTIONS
 
 =head2 new
+
+    my $convert = Convert::Moji->new (["table", $mytable]);
 
 Create the object. Arguments are a list of array references. The array
 references should have either the "noninvertible" flag "oneway" or one
@@ -542,7 +547,7 @@ Ben Bullock, <bkb@cpan.org>
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2008-2012 Ben Bullock, all rights reserved.
+Copyright 2008-2014 Ben Bullock, all rights reserved.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
