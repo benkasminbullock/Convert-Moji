@@ -1,5 +1,9 @@
 Revision history for perl module Convert::Moji
 
+0.08 2016-02-03
+
+* Documentation improvements
+
 0.07 2014-02-05
 
 * Specify minimum Perl version
