@@ -3,3 +3,5 @@ Makefile
 META.yml
 MANIFEST
 README
+examples/*-out.txt
+

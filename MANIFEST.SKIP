@@ -4,5 +4,8 @@
 \.gitignore
 ^MYMETA\.(json|yml)$
 ^Makefile$
-^build\.pl$
+^(build|make-pod)\.pl$
 dists
+examples/.*-out\.txt$
+^lib/Convert/Moji\.pod\.tmpl$
+^xt/.*

@@ -1,28 +1,41 @@
 [% start_year=2008 %]
+[%- MACRO example(file) BLOCK %]
+[%- pl = file _ ".pl" -%]
+[%- out = file _ "-out.txt" -%]
+[%- INCLUDE $pl | xtidy %]
+
+produces output
+
+[% INCLUDE $out | xtidy %]
+
+(This example is included as L<F<[% pl %]>|https://api.metacpan.org/source/BKB/[% info.name %]-[% info.version %]/examples/[% pl %]> in the distribution.)
+[% END -%]
+=encoding UTF-8
+
 =head1 NAME
 
 Convert::Moji - objects to convert alphabets
 
 =head1 SYNOPSIS
 
-[% INCLUDE "rot13.pl" | xtidy %]
-
-produces
-
-[% INCLUDE "rot13-out.txt" | xtidy %]
+[% example("rot13") %]
 
 =head1 VERSION
 
-This documents version [% version %] of Convert::Moji corresponding to
-git commit [% commit.commit %] released on [% commit.date %].
+This documents [% info.colon %] version [% info.version %]
+corresponding to git commit L<[% commit.commit %]|[% info.repo
+%]/commit/[% commit.commit %]> released on [% commit.date %].
 
 =head1 DESCRIPTION
 
-Convert::Moji creates objects which can be used to convert between
-different alphabets. 
+Convert::Moji objects convert between different alphabets. For
+example, a Convert::Moji object can convert between Greek letters and
+the English alphabet, or convert between phonetic symbols in Unicode
+and a representation of them in ASCII.
 
-This is basically a helper module for L<Lingua::JA::Moji>. It was
-split out of that module as a general-purpose converter for any
+This started as a helper module for L<Lingua::JA::Moji>, where it is
+used for converting between various Japanese methods of writing. It
+was split out of that module to be a general-purpose converter for any
 alphabets.
 
 =head1 FUNCTIONS
@@ -31,15 +44,16 @@ alphabets.
 
     my $convert = Convert::Moji->new (["table", $mytable]);
 
-Create the object. Arguments are a list of array references. The array
-references should have either the "noninvertible" flag "oneway" or one
-of the following as its first argument.
+Create the object. The arguments are a list of array references, one
+for each conversion.
 
-You can also chain the converters
-together, with
+Conversions can be chained together:
 
     my $does_something = Convert::Moji->new (["table", $mytable],
 					     ["tr", $left, $right]);
+
+The array references must have one of the following keywords as their
+first argument.
 
 =over
 
@@ -48,15 +62,9 @@ together, with
 After this comes one more argument, a reference to the hash containing
 the table. For example
 
-     my $conv = Convert::Moji->new (["table", \%crazyhash]);
+[% example("crazyhash") %]
 
-The hash keys and values can be any length, so you can convert single
-characters into words, as in 
-
-     my %crazyhash = {"a" => "apple", "b" => "banana"}
-
-and vice-versa if you wish. The conversion will be performed correctly
-regardless of the weirdness of your table.
+The hash keys and values can be any length.
 
 =item file
 
@@ -80,64 +88,60 @@ expression, for example
 
      Convert::Moji->new (["tr", "A-Z", "a-z"])
 
-will convert upper to lower case
-
-A "tr" is performed, and inversely for the invert case.
+will convert upper to lower case. A "tr" is performed, and inversely
+for the invert case.
 
 =back
 
 Conversions, via "convert", will be performed in the order of the
-arguments. Inversions will be performed in reverse order of the
+arguments to new. Inversions will be performed in reverse order of the
 arguments, skipping uninvertibles.
 
-=head2 Uninvertible operations
+=head3 Uninvertible operations
 
 If your conversion doesn't actually go backwards, you can tell the
 module when you create the object using a keyword "oneway":
 
     my $uninvertible = Convert::Moji->new (["oneway", "table", $mytable]);
 
-Then $uninvertible->invert doesn't do anything. You can also
-selectively choose which operations of a list are invertible and which
-aren't, so that only the invertible ones do something.
+Then the method C<$uninvertible->invert> doesn't do anything. You can
+also selectively choose which operations of a list are invertible and
+which aren't, so that only the invertible ones do something.
 
-=head2 Load from a file
+=head3 Load from a file
 
-Load a character conversion table from a file using
+To load a character conversion table from a file, use
 
 Convert::Moji->new (["file", $filename]);
 
-In this case, the file needs to contain a space-separated list to be
-converted one into the other.
+In this case, the file needs to contain a space-separated list of
+items to be converted one into the other, such as
 
-=head3 Bugs
+    alpha α
+    beta β
+    gamma γ
 
-This doesn't handle comments or blank lines in the file.
+The file reading cannot handle comments or blank lines in the
+file. Examples of use of this format are L<Lingua::JA::Moji/kana2hw>,
+L<Lingua::JA::Moji/circled2kanji>, and
+L<Lingua::JA::Moji/bracketed2kanji>.
 
 =head2 convert
 
-The convert method takes one argument, which is a scalar string to be
-converted into the other list by the stuff we fed in at "new".
+After building the object, it is used to convert text with the
+"convert" method. The convert method takes one argument, a scalar
+string to be converted by the rules we specified with L</new>.
 
-=head3 Bugs
-
-=over
-
-=item no "strict conversion"
-
-Just ignores (passes through) characters which it can't convert. It
-should have a "strict" option to also validate the input.
-
-=back
-
-=cut
+This ignores (passes through) characters which it can't convert.
 
 =head2 invert
 
-Inverts the input.
+This inverts the input.
 
-Takes two arguments, the first is the string to be inverted back
-through the conversion process, and the second is the type of conversion to perform if the inversion is ambiguous. This can take one of the following values
+This takes two arguments. The first is the string to be inverted back
+through the conversion process, and the second is the type of
+conversion to perform if the inversion is ambiguous. This can take one
+of the following values
 
 =over
 
@@ -153,30 +157,21 @@ If the inversion is ambiguous, it picks one at random.
 
 In this case you get an array reference back containing either strings
 where the inversion was unambiguous, or array references to arrays
-containing all possible strings. So it's a horrible mess.
+containing all possible strings.
 
 =item all_joined
 
-Like "all" but you get a scalar with all the options in square
+Like "all", but you get a scalar with all the options in square
 brackets instead of lots of array references.
 
 =back
 
-=head3 Bugs
-
-=over
-
-=item second argument not implemented fully
-
 The second argument part is only implemented for hash table based
 conversions, and is very likely to be buggy even then.
 
-=back
-
 =head1 FUNCTIONS
 
-These functions are used by the module and may be useful to outside
-programs.
+These are helper functions for the module.
 
 =head2 length_one
 
@@ -186,7 +181,9 @@ programs.
     length_one ('x', 'y', 'm');
 
 Returns true if every element of the array has a length equal to one,
-and false if any of them does not have length one.
+and false if any of them does not have length one. The L</make_regex>
+function uses this to decide whether to use a C<[abc]> or a C<(a|b|c)>
+style regex.
 
 =head2 make_regex
 
@@ -194,27 +191,28 @@ and false if any of them does not have length one.
 
     # $regex = "fgh|de|a|b|c";
 
-Given a list of inputs, make a regular expression which matches any of
-the characters in the list of inputs, longest match first. Each of the
+Given a list of strings, this makes a regular expression which matches
+any of the strings in the list, longest match first. Each of the
 elements of the list is quoted using C<quotemeta>. The regular
-expression does not contain capturing parentheses. For example, to
-convert everything in string C<$x> from the keys of C<%foo2bar> to its
-values,
+expression does not contain capturing parentheses. 
 
-    my %foo2bar = (mad => 'max', dangerous => 'trombone');
-    my $x = 'mad, bad, and dangerous to know';
-    my $regex = make_regex (keys %foo2bar);
-    $x =~ s/($regex)/$foo2bar{$1}/g;
-    # Now $x = "max, bad, and trombone to know".
+To convert everything in string C<$x> from the keys of C<%foo2bar> to
+its values,
+
+[% example("trombone") %]
+
+For more examples, see the "joke" program at
+L<Data::Kanji::Kanjidic/english>, or L<this example
+program|https://www.lemoda.net/perl/make-romaji/make-romaji.pl> which
+converts Japanese kanji words into romaji using the output of Mecab.
 
 =head2 unambiguous
 
-    if (unambiguous (\%table)) {
-
-    }
+    my $invertible = unambiguous (\%table));
 
 Returns true if all of the values in C<%table> are distinct, and false
-if any two of the values in C<%table> are the same.
+if any two of the values in C<%table> are the same. This is used by
+L</invert> to decide whether a table can be reversed.
 
 =head1 SEE ALSO
 
@@ -222,7 +220,30 @@ if any two of the values in C<%table> are the same.
 
 =item L<Lingua::JA::Moji>
 
+Uses this module.
+
 =item L<Lingua::KO::Munja>
+
+Uses this module.
+
+=item L<Data::Munge/list2re>
+
+This is similar to L</make_regex> in this module.
+
+=back
+
+=head1 EXPORTS
+
+The functions L</make_regex>, L</length_one> and L</unambiguous> are
+exported on demand. There are no export tags.
+
+=head1 DEPENDENCIES
+
+=over
+
+=item L<Carp>
+
+Functions C<carp> and C<croak> are used to report errors.
 
 =back
 

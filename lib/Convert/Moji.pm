@@ -1,15 +1,15 @@
 package Convert::Moji;
 
-require Exporter;
-@ISA = qw(Exporter);
-@EXPORT_OK = qw/make_regex length_one unambiguous/;
-
 use warnings;
 use strict;
 
+require Exporter;
+our @ISA = qw(Exporter);
+our @EXPORT_OK = qw/make_regex length_one unambiguous/;
+
 use Carp;
 
-our $VERSION = '0.08';
+our $VERSION = '0.09';
 
 # Load a converter from a file and return a hash reference containing
 # the left/right pairs.
@@ -94,7 +94,9 @@ sub ambiguous_reverse
 sub split_match
 {
     my ($erter, $input, $convert_type) = @_;
-    $convert_type = "first" if (!$convert_type);
+    if (! $convert_type) {
+	$convert_type = 'first';
+    }
     my $lhs = $erter->{rhs};
     my $rhs = $erter->{out2in};
     if (!$convert_type || $convert_type eq 'first') {
@@ -125,13 +127,7 @@ sub split_match
     }
 }
 
-# =head2 table
-
-# internal routine
-
 # Attach a table to a Convert::Moji object.
-
-#=cut
 
 sub table
 {
@@ -147,7 +143,8 @@ sub table
 	if ($erter->{unambiguous}) {
 	    my %out2in_table = reverse %{$table};
 	    $erter->{out2in} = \%out2in_table;
-	} else {
+	}
+	else {
 	    $erter->{out2in} = ambiguous_reverse ($table);
 	    @values = keys %{$erter->{out2in}};
 	}
@@ -155,10 +152,6 @@ sub table
     }
     return $erter;
 }
-
-# tr_erter
-
-# Internal routine.
 
 # Make a converter from a tr instruction.
 
@@ -200,14 +193,17 @@ sub new
 	}
 	if ($c->[0] eq "table") {
 	    $erter = table ($c->[1], $noinvert);
-	} elsif ($c->[0] eq "file") {
+	}
+	elsif ($c->[0] eq "file") {
 	    my $file = $c->[1];
 	    my $table = Convert::Moji::load_convertor ($file);
 	    return if !$table;
 	    $erter = table ($table, $noinvert);
-	} elsif ($c->[0] eq 'tr') {
+	}
+	elsif ($c->[0] eq 'tr') {
 	    $erter = tr_erter ($c->[1], $c->[2]);
-	} elsif ($c->[0] eq 'code') {
+	}
+	elsif ($c->[0] eq 'code') {
 	    $erter = code ($c->[1], $c->[2]);
 	    if (!$c->[2]) {
 		$noinvert = 1;
@@ -273,43 +269,7 @@ sub invert
     return $input;
 }
 
-# Split "string" using alphabet 1.
-
-sub split_by_input_alphabet
-{
-    my ($conv, $string) = @_;
-    my @split_string;
-    my $first = $conv->{erter}->[0];
-    if ($first->{type} eq 'tr') {
-        my $lhs = $first->{lhs};
-        @split_string = ($string =~ /([$lhs])/g);
-    }
-    elsif ($first->{type} eq 'table') {
-        my $lhs = $first->{lhs};
-        @split_string = ($string =~ /$lhs/g);
-    }
-    elsif ($first->{type} eq 'code') {
-        croak "Can't make a regex for a code-style converter";
-    }
-    return @split_string;
-}
-
-# Given "string" in the input alphabet, make a regular expression in
-# the output alphabet which will match any possible conversions of
-# "string" into the output alphabet.
-
-sub string2regex
-{
-    my ($converter, $string) = @_;
-    my @string_chars = $converter->split_by_alphabet1 ($string);
-    for my $c (@string_chars) {
-        my @output = $converter->convert ($c);
-    }
-
-}
-
-
 1;
 
-__END__
+
 
