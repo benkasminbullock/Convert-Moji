@@ -8,7 +8,7 @@ produces output
 
 [% INCLUDE $out | xtidy %]
 
-(This example is included as L<F<[% pl %]>|https://api.metacpan.org/source/BKB/[% info.name %]-[% info.version %]/examples/[% pl %]> in the distribution.)
+(This example is included as L<F<[% pl %]>|https://fastapi.metacpan.org/source/BKB/[% info.name %]-[% info.version %]/examples/[% pl %]> in the distribution.)
 [% END -%]
 =encoding UTF-8
 
@@ -38,7 +38,7 @@ used for converting between various Japanese methods of writing. It
 was split out of that module to be a general-purpose converter for any
 alphabets.
 
-=head1 FUNCTIONS
+=head1 METHODS
 
 =head2 new
 
@@ -104,9 +104,9 @@ module when you create the object using a keyword "oneway":
 
     my $uninvertible = Convert::Moji->new (["oneway", "table", $mytable]);
 
-Then the method C<$uninvertible->invert> doesn't do anything. You can
-also selectively choose which operations of a list are invertible and
-which aren't, so that only the invertible ones do something.
+Then the method C<< $uninvertible->invert >> doesn't do anything. You
+can also selectively choose which operations of a list are invertible
+and which aren't, so that only the invertible ones do something.
 
 =head3 Load from a file
 
@@ -229,6 +229,15 @@ Uses this module.
 =item L<Data::Munge/list2re>
 
 This is similar to L</make_regex> in this module.
+
+=item L<Lingua::Translit>
+
+Transliterates text between writing systems
+
+=item L<Match a dictionary against a string|https://www.lemoda.net/perl/match-dictionary-modules/index.html>
+
+A list of various other CPAN modules for matching a dictionary of
+words against strings.
 
 =back
 
