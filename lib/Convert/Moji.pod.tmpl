@@ -14,7 +14,7 @@ produces output
 
 =head1 NAME
 
-Convert::Moji - objects to convert alphabets
+Convert::Moji - Convert between alphabets
 
 =head1 SYNOPSIS
 
@@ -201,10 +201,8 @@ its values,
 
 [% example("trombone") %]
 
-For more examples, see the "joke" program at
-L<Data::Kanji::Kanjidic/english>, or L<this example
-program|https://www.lemoda.net/perl/make-romaji/make-romaji.pl> which
-converts Japanese kanji words into romaji using the output of Mecab.
+For another example, see the "joke" program at
+L<Data::Kanji::Kanjidic/english>.
 
 =head2 unambiguous
 
@@ -213,6 +211,8 @@ converts Japanese kanji words into romaji using the output of Mecab.
 Returns true if all of the values in C<%table> are distinct, and false
 if any two of the values in C<%table> are the same. This is used by
 L</invert> to decide whether a table can be reversed.
+
+[% example("unambiguous") %]
 
 =head1 SEE ALSO
 
